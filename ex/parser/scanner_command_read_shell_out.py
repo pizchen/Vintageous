@@ -66,7 +66,7 @@ def scan_command_read_shell_out(state):
         m = state.match(r'(?P<cmd>.+)')
         params.update(m.groupdict())
 
-    else:
+    elif c != EOF:
         state.backup()
         m = state.match(r'(?P<file_name>.+)$')
         params.update(m.groupdict())

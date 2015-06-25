@@ -296,8 +296,29 @@ class ExReadShellOut(sublime_plugin.TextCommand):
         else:
             # According to Vim's help, :r should read the current file's content
             # if no file name is given, but Vim doesn't do that.
-            # TODO: implement reading a file into the buffer.
-            show_not_implemented()
+            #
+            # If file name is given, reading it into the buffer.
+            if (not parsed.command.file_name):
+                show_not_implemented()
+            else:
+                file_name = parsed.command.file_name
+                if (not os.path.isabs(file_name)):
+                    if (self.view.file_name() is None):
+                        folders = []
+                    else:
+                        folders = [os.path.dirname(self.view.file_name())]
+                    folders += self.view.window().folders()
+
+                    for dir_name in folders:
+                        tempname = os.path.join(dir_name, file_name)
+                        if (os.path.isfile(tempname )):
+                            file_name = tempname
+                            break
+                try:
+                    with open(file_name, 'rt') as target_file:
+                        self.view.insert(edit, target_point, target_file.read())
+                except:
+                    show_status('Can not open file: "%s"'%(file_name))
             return
 
 
