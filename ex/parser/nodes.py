@@ -1,3 +1,4 @@
+import sublime
 from Vintageous.ex.ex_error import ERR_NO_RANGE_ALLOWED
 from Vintageous.ex.ex_error import VimError
 from Vintageous.ex.parser.tokens import TokenDigits
@@ -8,6 +9,7 @@ from Vintageous.ex.parser.tokens import TokenOfSearch
 from Vintageous.ex.parser.tokens import TokenPercent
 from Vintageous.ex.parser.tokens import TokenSearchBackward
 from Vintageous.ex.parser.tokens import TokenSearchForward
+from Vintageous.state import State
 from Vintageous.vi.search import reverse_search_by_pt
 from Vintageous.vi.utils import first_sel
 from Vintageous.vi.utils import R
@@ -111,6 +113,12 @@ class RangeNode(Node):
                 return row_at(view, sel.b - 1)
             else:
                 return row_at(view, sel.b)
+
+        st = State(view)
+        rg = st.marks.get_as_encoded_address(token.content)
+
+        if (isinstance(rg, sublime.Region)):
+            return view.rowcol(rg.begin())[0]
 
         raise NotImplementedError()
 
