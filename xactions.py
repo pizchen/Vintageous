@@ -997,7 +997,7 @@ class _vi_dd(ViTextCommandBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def run(self, edit, mode=None, count=1, register='"'):
+    def run(self, edit, mode=None, count=1, register='1'):
         def do_motion(view, s):
             if mode != modes.INTERNAL_NORMAL:
                 return s
