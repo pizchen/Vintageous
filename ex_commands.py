@@ -983,9 +983,12 @@ class ExSubstitute(sublime_plugin.TextCommand):
             self.replace_confirming(edit, pattern, compiled_rx, replacement, replace_count, target_region)
             return
 
-        line_text = self.view.substr(target_region)
-        new_text = re.sub(compiled_rx, replacement, line_text, count=replace_count)
-        self.view.replace(edit, target_region, new_text)
+        rows = [self.view.rowcol(e.begin())[0] for e in self.view.lines(target_region)]
+        for row in rows:
+            target = self.view.line(self.view.text_point(row, 0))
+            line_text = self.view.substr(target)
+            new_text = re.sub(compiled_rx, replacement, line_text, count=replace_count)
+            self.view.replace(edit, target, new_text)
 
     def replace_confirming(self, edit, pattern, compiled_rx, replacement,
                 replace_count, target_region):
