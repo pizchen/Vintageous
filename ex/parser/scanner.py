@@ -158,6 +158,8 @@ def scan_offset(state):
 
 
 def scan_command(state):
+    state.skip_run(' \t')
+    state.ignore()
     for (pattern, subscanner) in subscanners.patterns.items():
         if state.match(pattern):
             state.ignore()
